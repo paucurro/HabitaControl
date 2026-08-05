@@ -45,6 +45,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('comunidades/{comunidad}/etiquetas', EtiquetaController::class)->name('comunidades.etiquetas');
     Route::get('comunidades/{comunidad}/coeficientes', [CoeficienteController::class, 'index'])->name('comunidades.coeficientes');
     Route::get('comunidades/{comunidad}/diario', [DiarioController::class, 'index'])->name('comunidades.diario');
+    Route::post('comunidades/{comunidad}/diario', [DiarioController::class, 'store'])->name('comunidades.diario.store');
+    Route::put('comunidades/{comunidad}/diario/{tipo}/{apunte}/traspasar', [DiarioController::class, 'transfer'])
+        ->whereIn('tipo', ['apuntes', 'especiales', 'obras'])
+        ->whereNumber('apunte')
+        ->name('comunidades.diario.transfer');
     Route::put('comunidades/{comunidad}/coeficientes', [CoeficienteController::class, 'update'])->name('comunidades.coeficientes.update');
     Route::put('comunidades/{comunidad}/partes', [ParteController::class, 'updateMany'])->name('comunidades.partes.update_many');
     Route::resource('comunidades.partes', ParteController::class)

@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class DiarioIndexRequest extends FormRequest
 {
@@ -27,6 +28,10 @@ class DiarioIndexRequest extends FormRequest
         return [
             'parte' => ['nullable', 'integer'],
             'apunte' => ['nullable', 'integer'],
+            'tipo' => ['nullable', Rule::in(['apuntes', 'especiales', 'obras'])],
+            'orden' => ['nullable', Rule::in(['asc', 'desc'])],
+            'desde' => ['nullable', 'date'],
+            'hasta' => ['nullable', 'date', 'after_or_equal:desde'],
         ];
     }
 }

@@ -120,3 +120,20 @@ it('renders the community index as a sortable table', function () use ($resource
         ->toContain('{{ comunidad.partes_count }}')
         ->not->toContain('<Building2');
 });
+
+it('unifies journals with sortable balances, transfers and excel paste entry', function () use ($resourceDirectory) {
+    $component = file_get_contents($resourceDirectory.'/pages/Comunidades/Diario.vue');
+
+    expect($component)
+        ->toContain("apuntes: 'Diario apuntes'")
+        ->toContain("especiales: 'Diario apuntes especiales'")
+        ->toContain("obras: 'Diario obras'")
+        ->toContain('Saldo de la comunidad en este diario')
+        ->toContain("filtros.orden === 'asc'")
+        ->toContain('Pegar lista de Excel')
+        ->toContain(".map((line) => line.split('\\t'))")
+        ->toContain('while (form.apuntes.length < startRow + matrix.length)')
+        ->toContain('Guardar {{ form.apuntes.length }}')
+        ->toContain('Traspasar apunte')
+        ->toContain("import { store, transfer } from '@/routes/comunidades/diario';");
+});

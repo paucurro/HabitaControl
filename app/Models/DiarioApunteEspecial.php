@@ -2,32 +2,31 @@
 
 namespace App\Models;
 
-use Database\Factories\DiarioApunteFactory;
+use Database\Factories\DiarioApunteEspecialFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class DiarioApunte extends Model
+class DiarioApunteEspecial extends Model
 {
-    /** @use HasFactory<DiarioApunteFactory> */
+    /** @use HasFactory<DiarioApunteEspecialFactory> */
     use HasFactory;
 
     use SoftDeletes;
 
-    protected $table = 'diario_apuntes';
+    protected $table = 'diario_apuntes_especiales';
 
     protected $fillable = [
-        'comunidad_id', 'tipo_gasto_id', 'banco_id', 'parte_id', 'proveedor_id', 'liquidacion_id',
-        'fecha', 'numero_documento', 'descripcion', 'debe', 'haber', 'base_imponible', 'porcentaje_iva',
+        'comunidad_id', 'tipo_gasto_id', 'parte_id', 'proveedor_id', 'liquidacion_id', 'tipo',
+        'fecha', 'descripcion', 'importe', 'base_imponible', 'porcentaje_iva',
     ];
 
     protected function casts(): array
     {
         return [
             'fecha' => 'date',
-            'debe' => 'decimal:4',
-            'haber' => 'decimal:4',
+            'importe' => 'decimal:4',
             'base_imponible' => 'decimal:4',
             'porcentaje_iva' => 'decimal:4',
         ];
@@ -49,12 +48,6 @@ class DiarioApunte extends Model
     public function tipoGasto(): BelongsTo
     {
         return $this->belongsTo(TipoGasto::class);
-    }
-
-    /** @return BelongsTo<Banco, $this> */
-    public function banco(): BelongsTo
-    {
-        return $this->belongsTo(Banco::class);
     }
 
     /** @return BelongsTo<Proveedor, $this> */

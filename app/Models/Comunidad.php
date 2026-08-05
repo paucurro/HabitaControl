@@ -112,4 +112,10 @@ class Comunidad extends Model
     {
         return $this->hasMany(Banco::class);
     }
+
+    /** @return HasMany<TipoObra, $this> */
+    public function tiposObra(): HasMany
+    {
+        return $this->hasMany(TipoObra::class);
+    }
 }
