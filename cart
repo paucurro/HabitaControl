@@ -1,0 +1,25 @@
+<?php
+
+echo "php artisan -v \n";
+exec('php artisan "-v"');
+
+echo "php artisan optimize:clear" . PHP_EOL;
+exec('php artisan "optimize:clear"') . PHP_EOL;
+
+echo "php artisan clear-compiled" . PHP_EOL;
+exec('php artisan "clear-compiled"');
+
+echo "php artisan config:clear" . PHP_EOL;
+exec('php artisan "config:clear"');
+
+echo "php artisan route:clear" . PHP_EOL;
+exec('php artisan "route:clear"');
+
+echo "php artisan view:clear" . PHP_EOL;
+exec('php artisan "view:clear"');
+
+echo "php artisan cache:clear" . PHP_EOL;
+exec('php artisan "cache:clear"');
+
+echo "Finalizado OK" . PHP_EOL;
+
