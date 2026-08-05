@@ -6,6 +6,7 @@ use App\Models\DiarioApunte;
 use App\Models\DiarioApunteEspecial;
 use App\Models\DiarioObra;
 use App\Models\Parte;
+use App\Models\Proveedor;
 use App\Models\TipoGasto;
 use App\Models\TipoObra;
 use App\Models\User;
@@ -35,6 +36,14 @@ it('muestra el selector del diario con las comunidades visibles', function () {
 
 it('unifica los tres diarios y los ordena por fecha con saldo', function () {
     [$user, $community] = diaryCommunity();
+    $provider = Proveedor::factory()->create([
+        'administracion_id' => $community->administracion_id,
+        'nombre' => 'Ascensores Norte',
+    ]);
+    $part = Parte::factory()->for($community)->create([
+        'codigo' => '1-A',
+        'descripcion' => 'Ático izquierda',
+    ]);
     DiarioApunte::factory()->for($community)->create([
         'fecha' => '2026-01-01',
         'descripcion' => 'Primer apunte',
@@ -46,6 +55,8 @@ it('unifica los tres diarios y los ordena por fecha con saldo', function () {
         'descripcion' => 'Segundo apunte',
         'debe' => 0,
         'haber' => 25,
+        'parte_id' => $part->id,
+        'proveedor_id' => $provider->id,
     ]);
 
     $this->actingAs($user)->get(route('diario.show', [
@@ -60,6 +71,8 @@ it('unifica los tres diarios y los ordena por fecha con saldo', function () {
             ->where('saldoComunidad', '75.0000')
             ->where('apuntes.data.0.id', $latest->id)
             ->where('apuntes.data.0.saldo', '75.0000')
+            ->where('apuntes.data.0.parte.descripcion', 'Ático izquierda')
+            ->where('apuntes.data.0.proveedor.nombre', 'Ascensores Norte')
             ->has('catalogos.tiposGasto')
             ->has('catalogos.tiposObra'));
 });

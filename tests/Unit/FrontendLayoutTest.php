@@ -135,6 +135,15 @@ it('unifies journals with sortable balances, transfers and excel paste entry', f
         ->toContain('while (form.apuntes.length < startRow + matrix.length)')
         ->toContain('Guardar {{ form.apuntes.length }}')
         ->toContain('Traspasar apunte')
+        ->toContain(':title="entry.tipo_gasto.descripcion"')
+        ->toContain(':title="entry.banco.nombre"')
+        ->toContain('[parte.codigo, parte.descripcion]')
+        ->not->toContain('`Parte ${parte.codigo}`')
+        ->toContain(".join(' · ')")
+        ->toContain('{{ parteLabel(entry.parte) }}')
+        ->toContain('Prov: {{ entry.proveedor.nombre }}')
+        ->not->toContain('<th class="p-3">Parte</th>')
+        ->not->toContain('<th class="p-3">Proveedor</th>')
         ->toContain("} from '@/routes/diario';");
 });
 

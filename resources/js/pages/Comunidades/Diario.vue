@@ -66,7 +66,11 @@ type Apunte = {
     saldo: string;
     tipo?: string;
     liquidacion_id?: number | null;
-    parte?: { id: number; codigo: string } | null;
+    parte?: {
+        id: number;
+        codigo: string;
+        descripcion?: string | null;
+    } | null;
     tipo_gasto?: { id: number; codigo: string; descripcion: string } | null;
     tipo_obra?: { id: number; codigo: string; descripcion: string } | null;
     banco?: { id: number; codigo_interno?: string; nombre: string } | null;
@@ -484,6 +488,10 @@ function formatDate(value: string): string {
     );
 }
 
+function parteLabel(parte: NonNullable<Apunte['parte']>): string {
+    return [parte.codigo, parte.descripcion].filter(Boolean).join(' · ');
+}
+
 function paginationLabel(label: string): string {
     return label.replace('&laquo;', '‹').replace('&raquo;', '›');
 }
@@ -650,7 +658,6 @@ async function focusFirstCell(): Promise<void> {
                             <th v-if="filtros.tipo === 'obras'" class="p-3">
                                 Cuenta de obra
                             </th>
-                            <th class="p-3">Parte</th>
                             <th class="p-3">Tipo gasto</th>
                             <th
                                 v-if="filtros.tipo !== 'especiales'"
@@ -658,7 +665,6 @@ async function focusFirstCell(): Promise<void> {
                             >
                                 Contrapartida
                             </th>
-                            <th class="p-3">Proveedor</th>
                             <th class="p-3">Descripción</th>
                             <th
                                 v-if="filtros.tipo === 'especiales'"
@@ -708,12 +714,12 @@ async function focusFirstCell(): Promise<void> {
                                 <span v-else>—</span>
                             </td>
                             <td class="p-3 whitespace-nowrap">
-                                {{ entry.parte?.codigo || '—' }}
-                            </td>
-                            <td class="p-3 whitespace-nowrap">
-                                <span v-if="entry.tipo_gasto">
-                                    [{{ entry.tipo_gasto.codigo }}]
-                                    {{ entry.tipo_gasto.descripcion }}
+                                <span
+                                    v-if="entry.tipo_gasto"
+                                    :title="entry.tipo_gasto.descripcion"
+                                    class="cursor-help underline decoration-dotted underline-offset-4"
+                                >
+                                    {{ entry.tipo_gasto.codigo }}
                                 </span>
                                 <span v-else>—</span>
                             </td>
@@ -721,17 +727,32 @@ async function focusFirstCell(): Promise<void> {
                                 v-if="filtros.tipo !== 'especiales'"
                                 class="p-3 whitespace-nowrap"
                             >
-                                {{
-                                    entry.banco?.codigo_interno ||
-                                    entry.banco?.nombre ||
-                                    '—'
-                                }}
-                            </td>
-                            <td class="p-3 whitespace-nowrap">
-                                {{ entry.proveedor?.nombre || '—' }}
+                                <span
+                                    v-if="entry.banco"
+                                    :title="entry.banco.nombre"
+                                    class="cursor-help underline decoration-dotted underline-offset-4"
+                                >
+                                    {{
+                                        entry.banco.codigo_interno ||
+                                        entry.banco.id
+                                    }}
+                                </span>
+                                <span v-else>—</span>
                             </td>
                             <td class="max-w-md p-3">
-                                {{ entry.descripcion }}
+                                <div>{{ entry.descripcion }}</div>
+                                <div
+                                    v-if="entry.parte"
+                                    class="mt-0.5 text-xs text-muted-foreground"
+                                >
+                                    {{ parteLabel(entry.parte) }}
+                                </div>
+                                <div
+                                    v-if="entry.proveedor"
+                                    class="mt-0.5 text-xs text-muted-foreground"
+                                >
+                                    Prov: {{ entry.proveedor.nombre }}
+                                </div>
                             </td>
                             <td
                                 v-if="filtros.tipo === 'especiales'"

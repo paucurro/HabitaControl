@@ -108,7 +108,7 @@ class DiarioController extends Controller
                 ])
                 ->selectRaw('SUM(importe) OVER (ORDER BY fecha ASC, id ASC) AS saldo')
                 ->withCasts(['saldo' => 'decimal:4'])
-                ->with(['parte:id,codigo', 'tipoGasto:id,codigo,descripcion', 'proveedor:id,nombre']);
+                ->with(['parte:id,codigo,descripcion', 'tipoGasto:id,codigo,descripcion', 'proveedor:id,nombre']);
         }
 
         if ($tipo === 'obras') {
@@ -122,7 +122,7 @@ class DiarioController extends Controller
                 ->selectRaw('SUM(debe - haber) OVER (ORDER BY fecha ASC, id ASC) AS saldo')
                 ->withCasts(['saldo' => 'decimal:4'])
                 ->with([
-                    'parte:id,codigo', 'tipoGasto:id,codigo,descripcion', 'tipoObra:id,codigo,descripcion',
+                    'parte:id,codigo,descripcion', 'tipoGasto:id,codigo,descripcion', 'tipoObra:id,codigo,descripcion',
                     'banco:id,codigo_interno,nombre', 'proveedor:id,nombre',
                 ]);
         }
@@ -135,7 +135,7 @@ class DiarioController extends Controller
             ])
             ->selectRaw('SUM(debe - haber) OVER (ORDER BY fecha ASC, id ASC) AS saldo')
             ->withCasts(['saldo' => 'decimal:4'])
-            ->with(['parte:id,codigo', 'tipoGasto:id,codigo,descripcion', 'banco:id,codigo_interno,nombre', 'proveedor:id,nombre']);
+            ->with(['parte:id,codigo,descripcion', 'tipoGasto:id,codigo,descripcion', 'banco:id,codigo_interno,nombre', 'proveedor:id,nombre']);
     }
 
     private function communityBalance(Comunidad $comunidad, string $tipo): string
