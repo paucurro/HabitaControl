@@ -25,7 +25,7 @@ class CartController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function execute_cart(Request $request)
+    public function execute_cart(Request $request) 
     {
 
         $response = [
