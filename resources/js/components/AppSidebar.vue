@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
-import { Building2, LayoutGrid, Mail, UserCog, Users } from '@lucide/vue';
+import {
+    BookOpen,
+    Building2,
+    LayoutGrid,
+    Mail,
+    UserCog,
+    Users,
+} from '@lucide/vue';
 import AppLogo from '@/components/AppLogo.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
@@ -17,6 +24,7 @@ import { dashboard } from '@/routes';
 import { index as administracionUsuarios } from '@/routes/administracion/usuarios';
 import { index as comunicados } from '@/routes/comunicados';
 import { index as comunidades } from '@/routes/comunidades';
+import { index as diario } from '@/routes/diario';
 import { index as propietarios } from '@/routes/propietarios';
 import type { NavItem } from '@/types';
 
@@ -31,6 +39,7 @@ const mainNavItems: NavItem[] = [
 if (page.props.auth.canViewCommunities) {
     mainNavItems.push(
         { title: 'Comunidades', href: comunidades(), icon: Building2 },
+        { title: 'Diario', href: diario(), icon: BookOpen },
         { title: 'Propietarios', href: propietarios(), icon: Users },
         { title: 'Comunicados', href: comunicados(), icon: Mail },
     );

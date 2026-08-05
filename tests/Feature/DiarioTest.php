@@ -20,6 +20,19 @@ function diaryCommunity(): array
     return [$user, $community];
 }
 
+it('muestra el selector del diario con las comunidades visibles', function () {
+    [$user, $community] = diaryCommunity();
+    $otherAdministration = Administracion::factory()->create();
+    Comunidad::factory()->create(['administracion_id' => $otherAdministration->id]);
+
+    $this->actingAs($user)->get(route('diario.index'))
+        ->assertSuccessful()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('Diario/Index')
+            ->has('comunidades', 1)
+            ->where('comunidades.0.id', $community->id));
+});
+
 it('unifica los tres diarios y los ordena por fecha con saldo', function () {
     [$user, $community] = diaryCommunity();
     DiarioApunte::factory()->for($community)->create([
@@ -35,7 +48,7 @@ it('unifica los tres diarios y los ordena por fecha con saldo', function () {
         'haber' => 25,
     ]);
 
-    $this->actingAs($user)->get(route('comunidades.diario', [
+    $this->actingAs($user)->get(route('diario.show', [
         'comunidad' => $community,
         'tipo' => 'apuntes',
         'orden' => 'desc',
@@ -56,7 +69,7 @@ it('guarda varios apuntes pegados desde excel', function () {
     $part = Parte::factory()->for($community)->create();
     $expenseType = TipoGasto::factory()->for($community)->create();
 
-    $this->actingAs($user)->post(route('comunidades.diario.store', $community), [
+    $this->actingAs($user)->post(route('diario.store', $community), [
         'tipo' => 'apuntes',
         'apuntes' => [
             [
@@ -74,7 +87,7 @@ it('guarda varios apuntes pegados desde excel', function () {
                 'haber' => '200,25',
             ],
         ],
-    ])->assertRedirect(route('comunidades.diario', [
+    ])->assertRedirect(route('diario.show', [
         'comunidad' => $community,
         'tipo' => 'apuntes',
     ]));
@@ -93,14 +106,14 @@ it('traspasa un apunte entre diarios de forma atomica', function () {
         'importe' => -450,
     ]);
 
-    $this->actingAs($user)->put(route('comunidades.diario.transfer', [
+    $this->actingAs($user)->put(route('diario.transfer', [
         'comunidad' => $community,
         'tipo' => 'especiales',
         'apunte' => $entry,
     ]), [
         'destino' => 'obras',
         'tipo_obra_id' => $workType->id,
-    ])->assertRedirect(route('comunidades.diario', [
+    ])->assertRedirect(route('diario.show', [
         'comunidad' => $community,
         'tipo' => 'obras',
     ]));
@@ -118,7 +131,7 @@ it('no permite traspasar apuntes liquidados', function () {
     [$user, $community] = diaryCommunity();
     $entry = DiarioApunte::factory()->for($community)->create(['liquidacion_id' => 99]);
 
-    $this->actingAs($user)->put(route('comunidades.diario.transfer', [
+    $this->actingAs($user)->put(route('diario.transfer', [
         'comunidad' => $community,
         'tipo' => 'apuntes',
         'apunte' => $entry,

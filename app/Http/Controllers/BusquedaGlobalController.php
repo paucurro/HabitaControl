@@ -86,7 +86,7 @@ class BusquedaGlobalController extends Controller
             ->map(fn (DiarioApunte $apunte): array => [
                 'tipo' => 'Diario', 'titulo' => $apunte->descripcion,
                 'detalle' => trim($apunte->comunidad->nombre.' · '.($apunte->parte?->codigo ?? '').' · '.$apunte->fecha->format('d/m/Y'), ' ·'),
-                'url' => route('comunidades.diario', ['comunidad' => $apunte->comunidad_id, 'parte' => $apunte->parte_id, 'apunte' => $apunte->id]),
+                'url' => route('diario.show', ['comunidad' => $apunte->comunidad_id, 'parte' => $apunte->parte_id, 'apunte' => $apunte->id]),
             ]);
     }
 }

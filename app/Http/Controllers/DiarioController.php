@@ -14,13 +14,28 @@ use App\Models\DiarioObra;
 use App\Models\Proveedor;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 use InvalidArgumentException;
 
 class DiarioController extends Controller
 {
-    public function index(DiarioIndexRequest $request, Comunidad $comunidad): Response
+    public function index(Request $request): Response
+    {
+        Gate::authorize('viewAny', Comunidad::class);
+
+        return Inertia::render('Diario/Index', [
+            'comunidades' => Comunidad::query()
+                ->visibleTo($request->user())
+                ->orderBy('nombre')
+                ->orderBy('id')
+                ->get(['id', 'codigo', 'nombre']),
+        ]);
+    }
+
+    public function show(DiarioIndexRequest $request, Comunidad $comunidad): Response
     {
         $tipo = $request->string('tipo')->value() ?: 'apuntes';
         $orden = $request->input('orden') === 'asc' ? 'asc' : 'desc';
@@ -64,7 +79,7 @@ class DiarioController extends Controller
         $guardar->handle($comunidad, $validated['tipo'], $validated['apuntes']);
         $this->flashSuccess(count($validated['apuntes']) === 1 ? 'Apunte guardado.' : count($validated['apuntes']).' apuntes guardados.');
 
-        return to_route('comunidades.diario', ['comunidad' => $comunidad, 'tipo' => $validated['tipo']]);
+        return to_route('diario.show', ['comunidad' => $comunidad, 'tipo' => $validated['tipo']]);
     }
 
     public function transfer(
@@ -78,7 +93,7 @@ class DiarioController extends Controller
         $traspasar->handle($comunidad, $tipo, $apunte, $validated['destino'], $validated['tipo_obra_id'] ?? null);
         $this->flashSuccess('Apunte traspasado correctamente.');
 
-        return to_route('comunidades.diario', ['comunidad' => $comunidad, 'tipo' => $validated['destino']]);
+        return to_route('diario.show', ['comunidad' => $comunidad, 'tipo' => $validated['destino']]);
     }
 
     /** @return Builder<DiarioApunte>|Builder<DiarioApunteEspecial>|Builder<DiarioObra> */

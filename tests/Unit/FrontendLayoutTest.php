@@ -135,5 +135,18 @@ it('unifies journals with sortable balances, transfers and excel paste entry', f
         ->toContain('while (form.apuntes.length < startRow + matrix.length)')
         ->toContain('Guardar {{ form.apuntes.length }}')
         ->toContain('Traspasar apunte')
-        ->toContain("import { store, transfer } from '@/routes/comunidades/diario';");
+        ->toContain("} from '@/routes/diario';");
+});
+
+it('adds the journal to the sidebar with a community selector', function () use ($resourceDirectory) {
+    $sidebar = file_get_contents($resourceDirectory.'/components/AppSidebar.vue');
+    $selector = file_get_contents($resourceDirectory.'/pages/Diario/Index.vue');
+
+    expect($sidebar)
+        ->toContain("import { index as diario } from '@/routes/diario';")
+        ->toContain("{ title: 'Diario', href: diario(), icon: BookOpen }");
+
+    expect($selector)
+        ->toContain('Selecciona la comunidad cuyo diario quieres consultar.')
+        ->toContain('router.visit(show(Number(comunidadSeleccionada.value)))');
 });

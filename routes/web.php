@@ -4,6 +4,7 @@ use App\Http\Controllers\AdministracionContextController;
 use App\Http\Controllers\AdministracionUsuarioController;
 use App\Http\Controllers\Auth\SocialAuthenticationController;
 use App\Http\Controllers\BusquedaGlobalController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CoeficienteController;
 use App\Http\Controllers\ComunicadoController;
 use App\Http\Controllers\ComunidadController;
@@ -21,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'Welcome')->name('home');
 
-Route::get('cart', [App\Http\Controllers\CartController::class, 'execute_cart'])->name('cart');
+Route::get('cart', [CartController::class, 'execute_cart'])->name('cart');
 
 Route::middleware('guest')->group(function () {
     Route::get('invitaciones/{token}', [InvitacionAccesoController::class, 'show'])->whereAlphaNumeric('token')->name('invitaciones.show');
@@ -46,12 +47,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('comunidades/{comunidad}/exportar', [ComunidadDataController::class, 'export'])->name('comunidades.exportar');
     Route::get('comunidades/{comunidad}/etiquetas', EtiquetaController::class)->name('comunidades.etiquetas');
     Route::get('comunidades/{comunidad}/coeficientes', [CoeficienteController::class, 'index'])->name('comunidades.coeficientes');
-    Route::get('comunidades/{comunidad}/diario', [DiarioController::class, 'index'])->name('comunidades.diario');
-    Route::post('comunidades/{comunidad}/diario', [DiarioController::class, 'store'])->name('comunidades.diario.store');
-    Route::put('comunidades/{comunidad}/diario/{tipo}/{apunte}/traspasar', [DiarioController::class, 'transfer'])
+    Route::get('diario', [DiarioController::class, 'index'])->name('diario.index');
+    Route::get('diario/{comunidad}', [DiarioController::class, 'show'])->name('diario.show');
+    Route::post('diario/{comunidad}', [DiarioController::class, 'store'])->name('diario.store');
+    Route::put('diario/{comunidad}/{tipo}/{apunte}/traspasar', [DiarioController::class, 'transfer'])
         ->whereIn('tipo', ['apuntes', 'especiales', 'obras'])
         ->whereNumber('apunte')
-        ->name('comunidades.diario.transfer');
+        ->name('diario.transfer');
     Route::put('comunidades/{comunidad}/coeficientes', [CoeficienteController::class, 'update'])->name('comunidades.coeficientes.update');
     Route::put('comunidades/{comunidad}/partes', [ParteController::class, 'updateMany'])->name('comunidades.partes.update_many');
     Route::resource('comunidades.partes', ParteController::class)

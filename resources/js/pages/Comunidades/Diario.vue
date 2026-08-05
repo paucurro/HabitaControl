@@ -22,8 +22,12 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { diario, show as showComunidad } from '@/routes/comunidades';
-import { store, transfer } from '@/routes/comunidades/diario';
+import {
+    index as diarioIndex,
+    show as showDiario,
+    store,
+    transfer,
+} from '@/routes/diario';
 
 type DiarioTipo = 'apuntes' | 'especiales' | 'obras';
 type Option = { id: number; label: string; aliases: string[] };
@@ -103,7 +107,7 @@ const props = defineProps<{
 }>();
 
 defineOptions({
-    layout: { breadcrumbs: [{ title: 'Comunidades', href: '/comunidades' }] },
+    layout: { breadcrumbs: [{ title: 'Diario', href: '/diario' }] },
 });
 
 const editorOpen = ref(false);
@@ -322,7 +326,7 @@ function query(overrides: Record<string, string | number | null>): void {
         }
     }
 
-    router.get(diario.url(props.comunidad.id), values, {
+    router.get(showDiario.url(props.comunidad.id), values, {
         preserveScroll: true,
         preserveState: true,
         replace: true,
@@ -497,8 +501,8 @@ async function focusFirstCell(): Promise<void> {
             class="flex flex-col justify-between gap-4 xl:flex-row xl:items-end"
         >
             <div>
-                <CommunityBackLink :href="showComunidad.url(comunidad.id)">
-                    {{ comunidad.nombre }}
+                <CommunityBackLink :href="diarioIndex.url()">
+                    Cambiar comunidad
                 </CommunityBackLink>
                 <h1 class="mt-3 flex items-center gap-2 text-2xl font-semibold">
                     <BookOpen class="size-6" /> Diario
