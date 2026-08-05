@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Comunidad;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -13,7 +14,7 @@ class StoreComunidadRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()?->can('create', \App\Models\Comunidad::class) ?? false;
+        return $this->user()?->can('create', Comunidad::class) ?? false;
     }
 
     /**

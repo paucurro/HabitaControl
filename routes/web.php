@@ -1,17 +1,17 @@
 <?php
 
-use App\Http\Controllers\CoeficienteController;
-use App\Http\Controllers\AdministracionUsuarioController;
 use App\Http\Controllers\AdministracionContextController;
+use App\Http\Controllers\AdministracionUsuarioController;
+use App\Http\Controllers\Auth\SocialAuthenticationController;
 use App\Http\Controllers\BusquedaGlobalController;
-use App\Http\Controllers\ComunidadUsuarioController;
-use App\Http\Controllers\DiarioController;
+use App\Http\Controllers\CoeficienteController;
 use App\Http\Controllers\ComunicadoController;
 use App\Http\Controllers\ComunidadController;
 use App\Http\Controllers\ComunidadDataController;
+use App\Http\Controllers\ComunidadUsuarioController;
+use App\Http\Controllers\DiarioController;
 use App\Http\Controllers\EtiquetaController;
 use App\Http\Controllers\InvitacionAccesoController;
-use App\Http\Controllers\Auth\SocialAuthenticationController;
 use App\Http\Controllers\ParteController;
 use App\Http\Controllers\PropietarioController;
 use App\Http\Controllers\PropietarioInvitacionController;

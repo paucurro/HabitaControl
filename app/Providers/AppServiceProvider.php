@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use SocialiteProviders\Apple\Provider;
+use SocialiteProviders\Manager\SocialiteWasCalled;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,8 +26,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Event::listen(function (\SocialiteProviders\Manager\SocialiteWasCalled $event): void {
-            $event->extendSocialite('apple', \SocialiteProviders\Apple\Provider::class);
+        Event::listen(function (SocialiteWasCalled $event): void {
+            $event->extendSocialite('apple', Provider::class);
         });
 
         $this->configureDefaults();

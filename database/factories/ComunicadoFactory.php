@@ -2,9 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Comunicado;
 use App\Models\Comunidad;
 use App\Models\User;
-use App\Models\Comunicado;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

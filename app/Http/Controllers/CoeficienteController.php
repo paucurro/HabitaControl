@@ -16,6 +16,7 @@ class CoeficienteController extends Controller
     public function index(Comunidad $comunidad): Response
     {
         Gate::authorize('view', $comunidad);
+
         return Inertia::render('Comunidades/Coeficientes', [
             'comunidad' => $comunidad->only(['id', 'codigo', 'nombre']),
             'partes' => $comunidad->partes()->orderBy('codigo')->get(['id', 'codigo', 'descripcion']),

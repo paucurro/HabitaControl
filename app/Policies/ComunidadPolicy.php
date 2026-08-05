@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Comunidad;
 use App\Models\User;
+
 class ComunidadPolicy
 {
     public function before(User $user): ?bool
@@ -38,6 +39,7 @@ class ComunidadPolicy
         if ($user->role === 'superusuario') {
             return $user->selectedAdministracionId() !== null;
         }
+
         return $user->administracionesPropias()->exists()
             || $user->administraciones()->wherePivot('rol', 'administrador')->exists();
     }

@@ -16,6 +16,7 @@ class TipoGastoController extends Controller
     public function index(Comunidad $comunidad): Response
     {
         Gate::authorize('view', $comunidad);
+
         return Inertia::render('Comunidades/TiposGasto', [
             'comunidad' => $comunidad->only(['id', 'codigo', 'nombre']),
             'tiposGasto' => $comunidad->tiposGasto()->orderBy('codigo')->get(),

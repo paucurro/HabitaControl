@@ -51,9 +51,9 @@ it('defines every domain table with normalized identifiers and soft deletes', fu
     $tableDefinition = $matches[0];
 
     expect($tableDefinition)
-        ->toContain("\$table->id();")
-        ->toContain("\$table->timestamps();")
-        ->toContain("\$table->softDeletes();")
+        ->toContain('$table->id();')
+        ->toContain('$table->timestamps();')
+        ->toContain('$table->softDeletes();')
         ->not->toContain("'ind_");
 })->with($domainTables);
 

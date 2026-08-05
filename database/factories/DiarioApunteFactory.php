@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\DiarioApunte;
 use App\Models\Comunidad;
+use App\Models\DiarioApunte;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

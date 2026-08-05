@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\ImportComunidadData;
+use App\Http\Requests\IndexComunidadRequest;
 use App\Http\Requests\StoreComunidadRequest;
 use App\Http\Requests\UpdateComunidadRequest;
 use App\Models\Comunidad;
@@ -16,16 +17,23 @@ use Inertia\Response;
 
 class ComunidadController extends Controller
 {
-    public function index(): Response
+    public function index(IndexComunidadRequest $request): Response
     {
         Gate::authorize('viewAny', Comunidad::class);
 
         return Inertia::render('Comunidades/Index', [
             'comunidades' => Comunidad::query()
+                ->select(['id', 'codigo', 'nombre', 'nif', 'direccion', 'poblacion'])
                 ->visibleTo(request()->user())
                 ->withCount('partes')
-                ->orderBy('nombre')
-                ->paginate(20),
+                ->orderBy($request->sortColumn(), $request->sortDirection())
+                ->orderBy('id')
+                ->paginate(20)
+                ->withQueryString(),
+            'orden' => [
+                'columna' => $request->sortColumn(),
+                'direccion' => $request->sortDirection(),
+            ],
         ]);
     }
 

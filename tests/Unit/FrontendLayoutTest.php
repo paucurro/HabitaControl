@@ -101,3 +101,22 @@ it('uses the full available width for community detail lists', function (string 
     'expense types' => 'Comunidades/TiposGasto.vue',
     'deposit types' => 'Comunidades/TiposDeposito.vue',
 ]);
+
+it('renders the community index as a sortable table', function () use ($resourceDirectory) {
+    $component = file_get_contents($resourceDirectory.'/pages/Comunidades/Index.vue');
+
+    expect($component)
+        ->toContain("{ clave: 'codigo', etiqueta: 'Código'")
+        ->toContain("{ clave: 'nombre', etiqueta: 'Nombre'")
+        ->toContain("{ clave: 'nif', etiqueta: 'NIF'")
+        ->toContain("{ clave: 'direccion', etiqueta: 'Dirección'")
+        ->toContain("{ clave: 'poblacion', etiqueta: 'Población'")
+        ->toContain("{ clave: 'partes_count', etiqueta: 'Partes'")
+        ->toContain(':aria-sort="ariaOrden(columna.clave)"')
+        ->toContain(':href="enlaceOrden(columna.clave)"')
+        ->toContain('{{ comunidad.nif || \'—\' }}')
+        ->toContain("{{ comunidad.direccion || '—' }}")
+        ->toContain("{{ comunidad.poblacion || '—' }}")
+        ->toContain('{{ comunidad.partes_count }}')
+        ->not->toContain('<Building2');
+});

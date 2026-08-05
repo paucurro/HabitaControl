@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Comunidad;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -15,7 +16,7 @@ class UpdateComunidadRequest extends FormRequest
     {
         $comunidad = $this->route('comunidad');
 
-        return $comunidad instanceof \App\Models\Comunidad
+        return $comunidad instanceof Comunidad
             && ($this->user()?->can('update', $comunidad) ?? false);
     }
 

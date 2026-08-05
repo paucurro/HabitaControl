@@ -2,8 +2,8 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Comunidad;
 use App\Models\Administracion;
+use App\Models\Comunidad;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 

@@ -19,8 +19,7 @@ class CrearInvitacionAcceso
         User $invitadaPor,
         Propietario $propietario,
         ?string $email = null,
-    ): array
-    {
+    ): array {
         if (! $invitadaPor->isAdministracionManager($administracion->id) && $invitadaPor->role !== 'superusuario') {
             throw new AuthorizationException;
         }

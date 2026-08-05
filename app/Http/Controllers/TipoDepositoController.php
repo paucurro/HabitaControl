@@ -16,6 +16,7 @@ class TipoDepositoController extends Controller
     public function index(Comunidad $comunidad): Response
     {
         Gate::authorize('view', $comunidad);
+
         return Inertia::render('Comunidades/TiposDeposito', [
             'comunidad' => $comunidad->only(['id', 'codigo', 'nombre']),
             'tiposDeposito' => $comunidad->tiposDeposito()->orderBy('nombre')->get(),

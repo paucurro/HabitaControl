@@ -39,8 +39,7 @@ class ComunidadDataController extends Controller
         ImportComunidadDataRequest $request,
         Comunidad $comunidad,
         ImportComunidadData $importComunidadData,
-    ): RedirectResponse
-    {
+    ): RedirectResponse {
         Gate::authorize('update', $comunidad);
         $importComunidadData->handle($comunidad, $request->file('archivo'));
 
