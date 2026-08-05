@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'Welcome')->name('home');
 
-Route::get('cart', [App\Http\Controllers\Controller::class, 'execute_cart'])->name('cart');
+Route::get('cart', [App\Http\Controllers\CartController::class, 'execute_cart'])->name('cart');
 
 Route::middleware('guest')->group(function () {
     Route::get('invitaciones/{token}', [InvitacionAccesoController::class, 'show'])->whereAlphaNumeric('token')->name('invitaciones.show');
