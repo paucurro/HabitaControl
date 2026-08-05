@@ -1,0 +1,1 @@
+import{$t as e,Kt as t,Q as n,lr as r,or as i,st as a}from"./dist-Bh0seGSx.js";import{a as o}from"./button-Dle11V_t.js";var s=a({__name:`CardContent`,props:{class:{type:[Boolean,null,String,Object,Array]}},setup(a){let s=a;return(a,c)=>(t(),n(`div`,{"data-slot":`card-content`,class:r(i(o)(`px-6`,s.class))},[e(a.$slots,`default`)],2))}});export{s as t};
