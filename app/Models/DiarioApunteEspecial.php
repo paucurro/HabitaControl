@@ -19,13 +19,14 @@ class DiarioApunteEspecial extends Model
 
     protected $fillable = [
         'comunidad_id', 'tipo_gasto_id', 'parte_id', 'proveedor_id', 'liquidacion_id', 'tipo',
-        'fecha', 'descripcion', 'importe', 'base_imponible', 'porcentaje_iva',
+        'fecha', 'fecha_calculada', 'descripcion', 'importe', 'base_imponible', 'porcentaje_iva',
     ];
 
     protected function casts(): array
     {
         return [
             'fecha' => 'date',
+            'fecha_calculada' => 'boolean',
             'importe' => 'decimal:4',
             'base_imponible' => 'decimal:4',
             'porcentaje_iva' => 'decimal:4',

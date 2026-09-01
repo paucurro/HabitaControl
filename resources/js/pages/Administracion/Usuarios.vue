@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Form, Head, router } from '@inertiajs/vue3';
+import { Form, Head, router, setLayoutProps } from '@inertiajs/vue3';
 import { Trash2, UserPlus, Users } from '@lucide/vue';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
@@ -20,7 +20,7 @@ type Usuario = {
     comunidades_asignadas: Asignacion[];
 };
 
-defineProps<{
+const props = defineProps<{
     administracion: { id: number; nombre: string };
     usuarios: Usuario[];
     comunidades: Array<{ id: number; nombre: string }>;
@@ -31,6 +31,11 @@ defineOptions({
     layout: {
         breadcrumbs: [{ title: 'Usuarios', href: '/administracion/usuarios' }],
     },
+});
+
+setLayoutProps({
+    title: 'Usuarios y permisos',
+    description: props.administracion.nombre,
 });
 
 function asignacion(
@@ -72,13 +77,6 @@ function eliminar(usuario: Usuario): void {
 <template>
     <Head title="Usuarios y permisos" />
     <main class="flex flex-1 flex-col gap-6 p-4 md:p-8">
-        <div>
-            <h1 class="text-2xl font-semibold">Usuarios y permisos</h1>
-            <p class="text-sm text-muted-foreground">
-                {{ administracion.nombre }}
-            </p>
-        </div>
-
         <section
             class="grid gap-4 rounded-xl border bg-card p-4 md:grid-cols-[1fr_auto] md:items-end"
         >

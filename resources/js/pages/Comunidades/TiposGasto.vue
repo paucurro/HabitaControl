@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Form, Head, router } from '@inertiajs/vue3';
+import { Form, Head, router, setLayoutProps } from '@inertiajs/vue3';
 import { Pencil, Plus, Trash2 } from '@lucide/vue';
 import { ref } from 'vue';
 import CommunityBackLink from '@/components/CommunityBackLink.vue';
@@ -36,12 +36,17 @@ type TipoGasto = {
     excluir_de_liquidacion: boolean;
 };
 
-defineProps<{
+const props = defineProps<{
     comunidad: { id: number; codigo: string; nombre: string };
     tiposGasto: TipoGasto[];
 }>();
 defineOptions({
     layout: { breadcrumbs: [{ title: 'Comunidades', href: '/comunidades' }] },
+});
+
+setLayoutProps({
+    title: 'Tipos de gasto',
+    description: props.comunidad.nombre,
 });
 
 const showCreate = ref(false);
@@ -60,8 +65,7 @@ function eliminar(tipo: TipoGasto) {
             <CommunityBackLink :href="showComunidad.url(comunidad.id)">
                 {{ comunidad.nombre }}
             </CommunityBackLink>
-            <div class="mt-3 flex items-center justify-between">
-                <h1 class="text-2xl font-semibold">Tipos de gasto</h1>
+            <div class="mt-3 flex justify-end">
                 <Button @click="showCreate = true"
                     ><Plus class="size-4" /> Nuevo tipo de gasto</Button
                 >

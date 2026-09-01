@@ -27,7 +27,7 @@ class ComunidadDataController extends Controller
             $comunidad->partes()->with('propietarios')->orderBy('codigo')->chunk(200, function ($partes) use ($comunidad, $output): void {
                 foreach ($partes as $parte) {
                     foreach ($parte->propietarios as $propietario) {
-                        fputcsv($output, [$comunidad->codigo, $comunidad->nombre, $parte->codigo, $parte->descripcion, $parte->coeficiente_general, $propietario->nombre, $propietario->nif, $propietario->emails, $propietario->direccion, $propietario->codigo_postal, $propietario->poblacion, $propietario->provincia, $propietario->telefono, $propietario->movil], ';');
+                        fputcsv($output, [$comunidad->codigo, $comunidad->nombre, $parte->codigo, $parte->descripcion, str_replace('.', ',', $parte->coeficiente_general), $propietario->nombre, $propietario->nif, $propietario->emails, $propietario->direccion, $propietario->codigo_postal, $propietario->poblacion, $propietario->provincia, $propietario->telefono, $propietario->movil], ';');
                     }
                 }
             });

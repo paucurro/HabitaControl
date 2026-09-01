@@ -56,6 +56,7 @@ class TraspasarApunteDiario
             'parte_id' => $apunte->getAttribute('parte_id'),
             'proveedor_id' => $apunte->getAttribute('proveedor_id'),
             'fecha' => $apunte->getAttribute('fecha'),
+            'fecha_calculada' => $apunte->getAttribute('fecha_calculada'),
             'descripcion' => $apunte->getAttribute('descripcion'),
             'base_imponible' => $apunte->getAttribute('base_imponible'),
             'porcentaje_iva' => $apunte->getAttribute('porcentaje_iva'),

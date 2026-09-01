@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Head, Link, router } from '@inertiajs/vue3';
+import { Head, Link, router, setLayoutProps } from '@inertiajs/vue3';
 import { Pencil, Percent, Trash2 } from '@lucide/vue';
 import CommunityBackLink from '@/components/CommunityBackLink.vue';
 import { Button } from '@/components/ui/button';
@@ -44,6 +44,13 @@ defineOptions({
     layout: { breadcrumbs: [{ title: 'Comunidades', href: '/comunidades' }] },
 });
 
+setLayoutProps({
+    title: props.parte.codigo,
+    description: [props.parte.descripcion, props.parte.comunidad.nombre]
+        .filter(Boolean)
+        .join(' · '),
+});
+
 const detailFields = [
     ['orden', 'Orden'],
     ['tomo', 'Tomo'],
@@ -70,14 +77,6 @@ function eliminar() {
                 <CommunityBackLink :href="partesIndex.url(parte.comunidad.id)">
                     Partes y propietarios · {{ parte.comunidad.nombre }}
                 </CommunityBackLink>
-                <h1 class="mt-3 text-2xl font-semibold">
-                    {{ parte.codigo }}
-                    <span
-                        v-if="parte.descripcion"
-                        class="font-normal text-muted-foreground"
-                        >· {{ parte.descripcion }}</span
-                    >
-                </h1>
             </div>
             <div class="flex gap-2">
                 <Button variant="outline" as-child>

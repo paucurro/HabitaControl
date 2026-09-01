@@ -2,6 +2,7 @@
 
 namespace App\Actions;
 
+use App\Models\Administracion;
 use App\Models\InvitacionAcceso;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -30,7 +31,22 @@ class AceptarInvitacionAcceso
                     'email_verified_at' => now(),
                 ])->save();
             } elseif ($user->email_verified_at === null) {
-                $user->forceFill(['email_verified_at' => now()])->save();
+                $user->forceFill([
+                    'name' => $name,
+                    'password' => $password,
+                    'email_verified_at' => now(),
+                ])->save();
+            }
+
+            if (in_array($invitacion->tipo, ['superusuario', 'administrador', 'subusuario', 'autorizado'], true)) {
+                $user->forceFill([
+                    'name' => $name,
+                    'role' => match ($invitacion->tipo) {
+                        'superusuario' => 'superusuario',
+                        'administrador' => 'administrador',
+                        default => 'autorizado',
+                    },
+                ])->save();
             }
 
             $invitacion->propietario?->update([
@@ -39,9 +55,13 @@ class AceptarInvitacionAcceso
                 'acceso_web_activado_at' => now(),
             ]);
 
-            if ($invitacion->tipo === 'subusuario') {
-                $invitacion->administracion->usuarios()->syncWithoutDetaching([
-                    $user->id => ['rol' => 'subusuario', 'puede_gestionar_usuarios' => false],
+            if (in_array($invitacion->tipo, ['administrador', 'subusuario'], true)) {
+                $administracion = Administracion::query()->findOrFail($invitacion->administracion_id);
+                $administracion->usuarios()->syncWithoutDetaching([
+                    $user->id => [
+                        'rol' => $invitacion->tipo,
+                        'puede_gestionar_usuarios' => $invitacion->tipo === 'administrador',
+                    ],
                 ]);
             }
 

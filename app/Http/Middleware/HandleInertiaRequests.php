@@ -58,6 +58,10 @@ class HandleInertiaRequests extends Middleware
                     ? Administracion::query()->where('activa', true)->orderBy('nombre')->get(['id', 'nombre'])
                     : [],
             ],
+            'impersonation' => [
+                'active' => $request->session()->has('impersonator_user_id'),
+                'originalUserId' => $request->session()->get('impersonator_user_id'),
+            ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
     }

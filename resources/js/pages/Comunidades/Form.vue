@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Form, Head, Link } from '@inertiajs/vue3';
+import { Form, Head, Link, setLayoutProps } from '@inertiajs/vue3';
 import {
     Building2,
     ClipboardList,
@@ -56,6 +56,14 @@ const props = defineProps<{
 
 defineOptions({
     layout: { breadcrumbs: [{ title: 'Comunidades', href: '/comunidades' }] },
+});
+
+setLayoutProps({
+    title: props.comunidad
+        ? `Editar ${String(props.comunidad.nombre)}`
+        : 'Nueva comunidad',
+    description:
+        'Completa los datos administrativos, de liquidación, del edificio y sus cuentas bancarias.',
 });
 
 const generalFields = [
@@ -133,21 +141,6 @@ function removeBanco(index: number): void {
     <main
         class="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-6 p-4 md:p-8"
     >
-        <div class="flex flex-col gap-1">
-            <p class="text-sm font-medium text-primary">Ficha de comunidad</p>
-            <h1 class="text-2xl font-semibold tracking-tight md:text-3xl">
-                {{
-                    props.comunidad
-                        ? `Editar ${props.comunidad.nombre}`
-                        : 'Nueva comunidad'
-                }}
-            </h1>
-            <p class="text-sm text-muted-foreground">
-                Completa los datos administrativos, de liquidación, del edificio
-                y sus cuentas bancarias.
-            </p>
-        </div>
-
         <Form
             v-bind="
                 props.comunidad ? update.form(props.comunidad.id) : store.form()

@@ -6,7 +6,11 @@ defineProps<{
     propietarios: Array<{ id: number; nombre: string; emails?: string }>;
 }>();
 defineOptions({
-    layout: { breadcrumbs: [{ title: 'Comunicados', href: '/comunicados' }] },
+    layout: {
+        breadcrumbs: [{ title: 'Comunicados', href: '/comunicados' }],
+        title: 'Nuevo comunicado',
+        description: 'Cada propietario recibirá un mensaje individual.',
+    },
 });
 </script>
 <template>
@@ -14,12 +18,6 @@ defineOptions({
     <main
         class="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-6 p-4 md:p-8"
     >
-        <div>
-            <h1 class="text-2xl font-semibold">Nuevo comunicado</h1>
-            <p class="text-sm text-muted-foreground">
-                Cada propietario recibirá un mensaje individual.
-            </p>
-        </div>
         <Form
             v-bind="store.form()"
             class="grid gap-x-10 gap-y-7 rounded-xl border bg-card p-5 md:p-8 lg:grid-cols-2"

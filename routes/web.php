@@ -16,6 +16,9 @@ use App\Http\Controllers\InvitacionAccesoController;
 use App\Http\Controllers\ParteController;
 use App\Http\Controllers\PropietarioController;
 use App\Http\Controllers\PropietarioInvitacionController;
+use App\Http\Controllers\SincronizacionLegacyController;
+use App\Http\Controllers\SistemaUsuarioController;
+use App\Http\Controllers\SuplantacionUsuarioController;
 use App\Http\Controllers\TipoDepositoController;
 use App\Http\Controllers\TipoGastoController;
 use Illuminate\Support\Facades\Route;
@@ -50,6 +53,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('diario', [DiarioController::class, 'index'])->name('diario.index');
     Route::get('diario/{comunidad}', [DiarioController::class, 'show'])->name('diario.show');
     Route::post('diario/{comunidad}', [DiarioController::class, 'store'])->name('diario.store');
+    Route::delete('diario/{comunidad}/apuntes/{apunte}', [DiarioController::class, 'destroy'])
+        ->whereNumber('apunte')
+        ->name('diario.destroy');
+    Route::put('diario/{comunidad}/{tipo}/{apunte}', [DiarioController::class, 'update'])
+        ->whereIn('tipo', ['apuntes', 'especiales', 'obras'])
+        ->whereNumber('apunte')
+        ->name('diario.update');
     Route::put('diario/{comunidad}/{tipo}/{apunte}/traspasar', [DiarioController::class, 'transfer'])
         ->whereIn('tipo', ['apuntes', 'especiales', 'obras'])
         ->whereNumber('apunte')
@@ -72,6 +82,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('administracion/usuarios/{usuario}/comunidades/{comunidad}', [ComunidadUsuarioController::class, 'update'])
         ->name('administracion.usuarios.comunidades.update');
     Route::resource('comunicados', ComunicadoController::class)->only(['index', 'create', 'store']);
+    Route::get('sistema/sincronizacion', [SincronizacionLegacyController::class, 'index'])->name('sistema.sincronizacion.index');
+    Route::put('sistema/sincronizacion/{administracion}', [SincronizacionLegacyController::class, 'update'])->name('sistema.sincronizacion.update');
+    Route::post('sistema/sincronizacion/{administracion?}', [SincronizacionLegacyController::class, 'store'])->name('sistema.sincronizacion.store');
+    Route::get('sistema/usuarios', [SistemaUsuarioController::class, 'index'])->name('sistema.usuarios.index');
+    Route::post('sistema/usuarios', [SistemaUsuarioController::class, 'store'])
+        ->middleware('throttle:10,1')->name('sistema.usuarios.store');
+    Route::put('sistema/usuarios/{usuario}', [SistemaUsuarioController::class, 'update'])
+        ->name('sistema.usuarios.update');
+    Route::post('sistema/suplantacion', [SuplantacionUsuarioController::class, 'store'])
+        ->middleware('throttle:20,1')->name('sistema.suplantacion.store');
+    Route::delete('sistema/suplantacion', [SuplantacionUsuarioController::class, 'destroy'])
+        ->name('sistema.suplantacion.destroy');
 });
 
 require __DIR__.'/settings.php';

@@ -5,6 +5,8 @@ import {
     Building2,
     LayoutGrid,
     Mail,
+    RefreshCw,
+    ShieldCheck,
     UserCog,
     Users,
 } from '@lucide/vue';
@@ -26,10 +28,16 @@ import { index as comunicados } from '@/routes/comunicados';
 import { index as comunidades } from '@/routes/comunidades';
 import { index as diario } from '@/routes/diario';
 import { index as propietarios } from '@/routes/propietarios';
+import { index as sincronizacion } from '@/routes/sistema/sincronizacion';
+import { index as sistemaUsuarios } from '@/routes/sistema/usuarios';
 import type { NavItem } from '@/types';
 
 const page = usePage<{
-    auth: { canManageAdministration: boolean; canViewCommunities: boolean };
+    auth: {
+        user: { id: number };
+        canManageAdministration: boolean;
+        canViewCommunities: boolean;
+    };
     administrationContext: { isSuperuser: boolean; selectedId: number | null };
 }>();
 const mainNavItems: NavItem[] = [
@@ -56,6 +64,19 @@ if (page.props.auth.canManageAdministration) {
         title: 'Usuarios',
         href: administracionUsuarios(),
         icon: UserCog,
+    });
+}
+
+if (page.props.auth.user.id === 1) {
+    mainNavItems.push({
+        title: 'Usuarios del sistema',
+        href: sistemaUsuarios(),
+        icon: ShieldCheck,
+    });
+    mainNavItems.push({
+        title: 'Sincronización',
+        href: sincronizacion(),
+        icon: RefreshCw,
     });
 }
 </script>

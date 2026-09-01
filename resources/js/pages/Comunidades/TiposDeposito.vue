@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Form, Head, router } from '@inertiajs/vue3';
+import { Form, Head, router, setLayoutProps } from '@inertiajs/vue3';
 import { Pencil, Plus, Trash2 } from '@lucide/vue';
 import { ref } from 'vue';
 import CommunityBackLink from '@/components/CommunityBackLink.vue';
@@ -34,12 +34,17 @@ type TipoDeposito = {
     excluir_de_liquidacion: boolean;
 };
 
-defineProps<{
+const props = defineProps<{
     comunidad: { id: number; codigo: string; nombre: string };
     tiposDeposito: TipoDeposito[];
 }>();
 defineOptions({
     layout: { breadcrumbs: [{ title: 'Comunidades', href: '/comunidades' }] },
+});
+
+setLayoutProps({
+    title: 'Tipos de depósito',
+    description: props.comunidad.nombre,
 });
 
 const showCreate = ref(false);
@@ -58,8 +63,7 @@ function eliminar(tipo: TipoDeposito) {
             <CommunityBackLink :href="showComunidad.url(comunidad.id)">
                 {{ comunidad.nombre }}
             </CommunityBackLink>
-            <div class="mt-3 flex items-center justify-between">
-                <h1 class="text-2xl font-semibold">Tipos de depósito</h1>
+            <div class="mt-3 flex justify-end">
                 <Button @click="showCreate = true"
                     ><Plus class="size-4" /> Nuevo tipo de depósito</Button
                 >

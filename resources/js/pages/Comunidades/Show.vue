@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, setLayoutProps } from '@inertiajs/vue3';
 import {
     Building2,
     Download,
@@ -15,7 +15,7 @@ import {
     ShieldCheck,
     Users,
 } from '@lucide/vue';
-import { computed } from 'vue';
+import { computed, watchEffect } from 'vue';
 import { Button } from '@/components/ui/button';
 import {
     Card,
@@ -87,6 +87,24 @@ defineOptions({
 
 const numberFormatter = new Intl.NumberFormat('es-ES', {
     maximumFractionDigits: 4,
+});
+
+const communityAddress = computed(
+    () =>
+        [
+            props.comunidad.direccion,
+            props.comunidad.codigo_postal,
+            props.comunidad.poblacion,
+        ]
+            .filter(Boolean)
+            .join(' · ') || 'Sin dirección',
+);
+
+watchEffect(() => {
+    setLayoutProps({
+        title: props.comunidad.nombre,
+        description: communityAddress.value,
+    });
 });
 
 function displayValue(value: string | number | null | undefined): string {
@@ -213,28 +231,7 @@ const detailGroups = computed(
     <Head :title="comunidad.nombre" />
 
     <main class="flex flex-1 flex-col gap-6 p-4 md:p-8">
-        <div
-            class="flex flex-col justify-between gap-4 lg:flex-row lg:items-center"
-        >
-            <div class="grid gap-1">
-                <h1 class="text-2xl font-semibold tracking-tight md:text-3xl">
-                    {{ comunidad.nombre }}
-                </h1>
-                <p
-                    class="flex items-center gap-1.5 text-sm text-muted-foreground"
-                >
-                    <MapPin class="size-4 shrink-0" />
-                    {{
-                        [
-                            comunidad.direccion,
-                            comunidad.codigo_postal,
-                            comunidad.poblacion,
-                        ]
-                            .filter(Boolean)
-                            .join(' · ') || 'Sin dirección'
-                    }}
-                </p>
-            </div>
+        <div class="flex flex-wrap justify-end gap-4">
             <div class="flex flex-wrap gap-2">
                 <Button variant="outline" as-child>
                     <Link :href="edit(comunidad.id)"

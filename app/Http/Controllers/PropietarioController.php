@@ -13,7 +13,14 @@ class PropietarioController extends Controller
 {
     public function index(): Response
     {
-        return Inertia::render('Propietarios/Index', ['propietarios' => Propietario::query()->visibleTo(request()->user())->withCount('partes')->orderBy('nombre')->paginate(25)]);
+        return Inertia::render('Propietarios/Index', [
+            'propietarios' => Propietario::query()
+                ->select(['id', 'nombre', 'conyuge', 'telefono', 'telefono_trabajo', 'movil', 'emails'])
+                ->visibleTo(request()->user())
+                ->withCount('partes')
+                ->orderBy('nombre')
+                ->paginate(25),
+        ]);
     }
 
     public function store(StorePropietarioRequest $request): RedirectResponse

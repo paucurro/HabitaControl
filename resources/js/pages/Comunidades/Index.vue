@@ -36,7 +36,11 @@ const props = defineProps<{
 }>();
 
 defineOptions({
-    layout: { breadcrumbs: [{ title: 'Comunidades', href: '/comunidades' }] },
+    layout: {
+        breadcrumbs: [{ title: 'Comunidades', href: '/comunidades' }],
+        title: 'Comunidades',
+        description: 'Gestión de comunidades, partes y propietarios.',
+    },
 });
 
 const columnas: Array<{
@@ -86,22 +90,20 @@ function etiquetaPaginacion(etiqueta: string): string {
 
 <template>
     <Head title="Comunidades" />
-    <main class="flex flex-1 flex-col gap-6 p-4 md:p-8">
-        <div class="flex items-center justify-between gap-4">
-            <div>
-                <h1 class="text-2xl font-semibold">Comunidades</h1>
-                <p class="text-sm text-muted-foreground">
-                    Gestión de comunidades, partes y propietarios.
-                </p>
-            </div>
+    <main
+        class="flex flex-1 flex-col gap-6 p-4 md:p-8 xl:h-[calc(100svh-5rem)] xl:min-h-0 xl:flex-none xl:overflow-hidden"
+    >
+        <div class="flex shrink-0 justify-end">
             <Button as-child>
                 <Link :href="create()"> <Plus class="size-4" /> Nueva </Link>
             </Button>
         </div>
 
-        <div class="overflow-hidden rounded-xl border bg-card">
+        <div
+            class="min-h-0 flex-1 overflow-hidden rounded-xl border bg-card xl:[&>[data-slot=table-container]]:h-full xl:[&>[data-slot=table-container]]:overflow-auto"
+        >
             <Table class="min-w-6xl">
-                <TableHeader>
+                <TableHeader class="sticky top-0 z-10 bg-card">
                     <TableRow>
                         <TableHead
                             v-for="columna in columnas"
@@ -195,7 +197,7 @@ function etiquetaPaginacion(etiqueta: string): string {
         <nav
             v-if="comunidades.links.length > 3"
             aria-label="Paginación de comunidades"
-            class="flex flex-wrap justify-center gap-1"
+            class="flex shrink-0 flex-wrap justify-center gap-1"
         >
             <Link
                 v-for="(pagina, paginaIndex) in comunidades.links"

@@ -34,8 +34,6 @@ defineOptions({
 <template>
     <Head title="Ajustes de seguridad" />
 
-    <h1 class="sr-only">Ajustes de seguridad</h1>
-
     <div class="space-y-6">
         <Heading
             variant="small"

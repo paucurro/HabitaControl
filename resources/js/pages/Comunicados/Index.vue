@@ -15,14 +15,16 @@ defineProps<{
     };
 }>();
 defineOptions({
-    layout: { breadcrumbs: [{ title: 'Comunicados', href: '/comunicados' }] },
+    layout: {
+        breadcrumbs: [{ title: 'Comunicados', href: '/comunicados' }],
+        title: 'Comunicados',
+    },
 });
 </script>
 <template>
     <Head title="Comunicados" />
     <main class="flex flex-1 flex-col gap-6 p-4 md:p-8">
-        <div class="flex items-center justify-between">
-            <h1 class="text-2xl font-semibold">Comunicados</h1>
+        <div class="flex justify-end">
             <Link
                 :href="create()"
                 class="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground"

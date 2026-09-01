@@ -35,7 +35,13 @@ class InvitacionAccesoNotification extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $tipo = $this->invitacion->tipo === 'propietario' ? 'propietario' : 'colaborador';
+        $tipo = match ($this->invitacion->tipo) {
+            'propietario' => 'propietario',
+            'superusuario' => 'superadministrador',
+            'administrador' => 'administrador',
+            'subusuario' => 'colaborador',
+            default => 'usuario',
+        };
 
         return (new MailMessage)
             ->subject('Invitación de acceso a IComunidades')

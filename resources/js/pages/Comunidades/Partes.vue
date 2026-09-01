@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { Head, Link, router, useForm } from '@inertiajs/vue3';
+import { Head, Link, router, setLayoutProps, useForm } from '@inertiajs/vue3';
 import { Pencil, Plus, Save, X } from '@lucide/vue';
-import { computed, ref } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
 import { updateMany } from '@/actions/App/Http/Controllers/ParteController';
 import CommunityBackLink from '@/components/CommunityBackLink.vue';
 import { Button } from '@/components/ui/button';
@@ -57,6 +57,15 @@ defineOptions({
 const editandoMasivamente = ref(false);
 const partesEditables = ref<ParteEditable[]>([]);
 const form = useForm<{ partes: ParteEditable[] }>({ partes: [] });
+
+watchEffect(() => {
+    setLayoutProps({
+        title: 'Partes y propietarios',
+        description: editandoMasivamente.value
+            ? 'Edita los datos directamente en la tabla y guarda todos los cambios.'
+            : 'Consulta las partes de la comunidad y sus propietarios.',
+    });
+});
 
 const coeficientesActuales = computed(() =>
     editandoMasivamente.value
@@ -174,20 +183,8 @@ function goToParte(parteId: number): void {
                 {{ comunidad.nombre }}
             </CommunityBackLink>
             <div
-                class="mt-3 flex flex-col justify-between gap-3 sm:flex-row sm:items-center"
+                class="mt-3 flex flex-col justify-end gap-3 sm:flex-row sm:items-center"
             >
-                <div>
-                    <h1 class="text-2xl font-semibold">
-                        Partes y propietarios
-                    </h1>
-                    <p class="text-sm text-muted-foreground">
-                        {{
-                            editandoMasivamente
-                                ? 'Edita los datos directamente en la tabla y guarda todos los cambios.'
-                                : 'Consulta las partes de la comunidad y sus propietarios.'
-                        }}
-                    </p>
-                </div>
                 <div class="flex flex-wrap items-center gap-2">
                     <Button
                         v-if="!editandoMasivamente && partes.length"

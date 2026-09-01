@@ -16,11 +16,23 @@ class Administracion extends Model
 
     protected $table = 'administraciones';
 
-    protected $fillable = ['propietario_user_id', 'nombre', 'slug', 'activa'];
+    protected $fillable = [
+        'propietario_user_id', 'nombre', 'slug', 'activa', 'db_host', 'db_port',
+        'db_origen', 'db_usuario', 'db_password', 'sync_estado', 'sync_started_at',
+        'sync_finished_at', 'sync_resultado', 'sync_error',
+    ];
+
+    protected $hidden = ['db_password'];
 
     protected function casts(): array
     {
-        return ['activa' => 'boolean'];
+        return [
+            'activa' => 'boolean',
+            'db_password' => 'encrypted',
+            'sync_started_at' => 'datetime',
+            'sync_finished_at' => 'datetime',
+            'sync_resultado' => 'array',
+        ];
     }
 
     public function propietario(): BelongsTo

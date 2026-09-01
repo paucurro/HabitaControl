@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Form, Head, Link } from '@inertiajs/vue3';
+import { Form, Head, Link, setLayoutProps } from '@inertiajs/vue3';
 import { CheckCheck, Search, Users, X } from '@lucide/vue';
 import { computed, ref } from 'vue';
 import CommunityBackLink from '@/components/CommunityBackLink.vue';
@@ -35,6 +35,11 @@ const props = defineProps<{
 }>();
 defineOptions({
     layout: { breadcrumbs: [{ title: 'Comunidades', href: '/comunidades' }] },
+});
+
+setLayoutProps({
+    title: props.parte ? 'Editar parte' : 'Nueva parte',
+    description: props.comunidad.nombre,
 });
 
 const selectClass =
@@ -118,9 +123,6 @@ function clearSelectedPropietarios(): void {
             <CommunityBackLink :href="showComunidad.url(comunidad.id)">
                 {{ comunidad.nombre }}
             </CommunityBackLink>
-            <h1 class="mt-3 text-2xl font-semibold">
-                {{ props.parte ? 'Editar parte' : 'Nueva parte' }}
-            </h1>
         </div>
         <Form
             v-bind="

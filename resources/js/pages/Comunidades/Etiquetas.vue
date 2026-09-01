@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
-defineProps<{
-    comunidad: { nombre: string };
+import { Head, setLayoutProps } from '@inertiajs/vue3';
+import CommunityBackLink from '@/components/CommunityBackLink.vue';
+import { show as showComunidad } from '@/routes/comunidades';
+const props = defineProps<{
+    comunidad: { id: number; nombre: string };
     partes: Array<{
         id: number;
         codigo: string;
@@ -16,18 +18,19 @@ defineProps<{
     }>;
 }>();
 defineOptions({ layout: { breadcrumbs: [{ title: 'Etiquetas', href: '#' }] } });
+setLayoutProps({
+    title: 'Etiquetas de sobres',
+    description: props.comunidad.nombre,
+});
 const printLabels = () => window.print();
 </script>
 <template>
     <Head :title="`Etiquetas · ${comunidad.nombre}`" />
     <main class="p-4 md:p-8 print:p-0">
-        <div class="mb-6 flex items-center justify-between print:hidden">
-            <div>
-                <h1 class="text-2xl font-semibold">Etiquetas de sobres</h1>
-                <p class="text-sm text-muted-foreground">
-                    {{ comunidad.nombre }}
-                </p>
-            </div>
+        <div class="mb-6 flex items-center justify-between gap-4 print:hidden">
+            <CommunityBackLink :href="showComunidad.url(comunidad.id)">
+                {{ comunidad.nombre }}
+            </CommunityBackLink>
             <button
                 class="rounded-md bg-primary px-4 py-2 text-primary-foreground"
                 @click="printLabels"

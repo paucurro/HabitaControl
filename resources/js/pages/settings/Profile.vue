@@ -30,8 +30,6 @@ const user = computed(() => page.props.auth.user);
 <template>
     <Head title="Ajustes del perfil" />
 
-    <h1 class="sr-only">Ajustes del perfil</h1>
-
     <div class="flex flex-col space-y-6">
         <Heading
             variant="small"

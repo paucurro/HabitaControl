@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Head, useForm } from '@inertiajs/vue3';
-import { computed, reactive } from 'vue';
+import { Head, setLayoutProps, useForm } from '@inertiajs/vue3';
+import { computed, reactive, watchEffect } from 'vue';
 import CommunityBackLink from '@/components/CommunityBackLink.vue';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -29,6 +29,13 @@ const props = defineProps<{
 }>();
 defineOptions({
     layout: { breadcrumbs: [{ title: 'Comunidades', href: '/comunidades' }] },
+});
+
+watchEffect(() => {
+    setLayoutProps({
+        title: 'Coeficientes por tipo de gasto',
+        description: props.comunidad.nombre,
+    });
 });
 
 const grid = reactive<Record<number, Record<number, string>>>({});
@@ -130,10 +137,7 @@ function guardar() {
                 <CommunityBackLink :href="showComunidad.url(comunidad.id)">
                     {{ comunidad.nombre }}
                 </CommunityBackLink>
-                <h1 class="mt-3 text-2xl font-semibold">
-                    Coeficientes por tipo de gasto
-                </h1>
-                <p class="text-sm text-muted-foreground">
+                <p class="mt-3 text-sm text-muted-foreground">
                     Introduce los coeficientes como porcentajes (por ejemplo,
                     13,80), sin escribir el símbolo %. Usa ↑ y ↓ para cambiar de
                     fila y → para avanzar a la siguiente columna.

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Administracion;
 use App\Models\Comunidad;
 use App\Models\Parte;
 use App\Models\Propietario;
@@ -218,9 +219,121 @@ it('gestiona una comunidad y relaciona una parte con varios propietarios', funct
         ->assertSuccessful()->assertInertia(fn ($page) => $page->component('Propietarios/Show')->has('propietario.partes', 1));
 });
 
+it('lista los datos de contacto de los propietarios y cuantas partes tienen', function () {
+    $user = User::factory()->create();
+    $administracion = Administracion::factory()->for($user, 'propietario')->create();
+    $propietario = Propietario::factory()->create([
+        'administracion_id' => $administracion->id,
+        'nombre' => 'Ana Pérez',
+        'conyuge' => 'Luis García',
+        'telefono' => '971 111 111',
+        'telefono_trabajo' => '971 222 222',
+        'movil' => '600 333 333',
+        'emails' => 'ana@example.com',
+    ]);
+    $comunidad = Comunidad::factory()->create(['administracion_id' => $administracion->id]);
+    $partes = Parte::factory()->count(2)->for($comunidad)->create();
+    $partes->each(fn (Parte $parte) => $parte->propietarios()->attach($propietario));
+
+    $this->actingAs($user)->get(route('propietarios.index'))
+        ->assertSuccessful()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('Propietarios/Index')
+            ->has('propietarios.data', 1)
+            ->where('propietarios.data.0.nombre', 'Ana Pérez')
+            ->where('propietarios.data.0.conyuge', 'Luis García')
+            ->where('propietarios.data.0.telefono', '971 111 111')
+            ->where('propietarios.data.0.telefono_trabajo', '971 222 222')
+            ->where('propietarios.data.0.movil', '600 333 333')
+            ->where('propietarios.data.0.emails', 'ana@example.com')
+            ->where('propietarios.data.0.partes_count', 2));
+});
+
+it('crea una ficha completa de propietario', function () {
+    $user = User::factory()->create();
+    $administracion = Administracion::factory()->for($user, 'propietario')->create();
+
+    $response = $this->actingAs($user)->post(route('propietarios.store'), [
+        'tipo' => '1',
+        'nombre' => 'Clara Ferrer',
+        'conyuge' => 'Joan Puig',
+        'nif' => '87654321X',
+        'direccion' => 'Carrer de la Mar, 4',
+        'codigo_postal' => '07002',
+        'poblacion' => 'Palma',
+        'provincia' => 'Illes Balears',
+        'pais' => 'España',
+        'telefono' => '971 400 400',
+        'telefono_trabajo' => '971 500 500',
+        'movil' => '600 600 600',
+        'emails' => 'clara@example.com',
+        'iban' => 'ES7921000813610123456789',
+        'bic' => 'CAIXESBBXXX',
+        'domiciliar_recibos' => true,
+        'enviar_email' => true,
+        'observaciones' => 'Nueva propietaria.',
+    ]);
+
+    $propietario = Propietario::query()->where('nombre', 'Clara Ferrer')->firstOrFail();
+
+    $response->assertRedirect(route('propietarios.show', $propietario));
+
+    expect($propietario)
+        ->administracion_id->toBe($administracion->id)
+        ->tipo->toBe('1')
+        ->conyuge->toBe('Joan Puig')
+        ->telefono_trabajo->toBe('971 500 500')
+        ->iban->toBe('ES7921000813610123456789')
+        ->bic->toBe('CAIXESBBXXX')
+        ->domiciliar_recibos->toBeTrue()
+        ->enviar_email->toBeTrue();
+});
+
+it('actualiza todos los campos de la ficha del propietario', function () {
+    $user = User::factory()->create();
+    $administracion = Administracion::factory()->for($user, 'propietario')->create();
+    $propietario = Propietario::factory()->create(['administracion_id' => $administracion->id]);
+
+    $this->actingAs($user)
+        ->from(route('propietarios.show', $propietario))
+        ->put(route('propietarios.update', $propietario), [
+            'tipo' => '2',
+            'nombre' => 'Marta Vidal',
+            'conyuge' => 'Pau Serra',
+            'nif' => '12345678Z',
+            'direccion' => 'Carrer Major, 10',
+            'codigo_postal' => '07001',
+            'poblacion' => 'Palma',
+            'provincia' => 'Illes Balears',
+            'pais' => 'España',
+            'telefono' => '971 100 100',
+            'telefono_trabajo' => '971 200 200',
+            'movil' => '600 300 300',
+            'emails' => 'marta@example.com;familia@example.com',
+            'iban' => 'ES9121000418450200051332',
+            'bic' => 'CAIXESBBXXX',
+            'domiciliar_recibos' => true,
+            'enviar_email' => true,
+            'observaciones' => 'Prefiere comunicaciones por email.',
+        ])
+        ->assertRedirect(route('propietarios.show', $propietario));
+
+    expect($propietario->fresh())
+        ->tipo->toBe('2')
+        ->nombre->toBe('Marta Vidal')
+        ->conyuge->toBe('Pau Serra')
+        ->telefono_trabajo->toBe('971 200 200')
+        ->iban->toBe('ES9121000418450200051332')
+        ->bic->toBe('CAIXESBBXXX')
+        ->domiciliar_recibos->toBeTrue()
+        ->enviar_email->toBeTrue()
+        ->observaciones->toBe('Prefiere comunicaciones por email.');
+});
+
 it('importa y exporta los datos de una comunidad en csv compatible con excel', function () {
     $user = User::factory()->create(['email_verified_at' => now()]);
-    $comunidad = Comunidad::factory()->create();
+    $administracion = Administracion::factory()->for($user, 'propietario')->create();
+    $comunidad = Comunidad::factory()->create(['administracion_id' => $administracion->id]);
     $csv = "parte_codigo;propietario_nombre;propietario_nif;email;parte_descripcion;coeficiente\n1-A;Ana Pérez;12345678Z;ana@example.com;Vivienda;12.5\n";
 
     $this->actingAs($user)->post(route('comunidades.importar', $comunidad), [
@@ -230,8 +343,13 @@ it('importa y exporta los datos de una comunidad en csv compatible con excel', f
     expect($comunidad->partes()->count())->toBe(1)
         ->and(Propietario::where('nif', '12345678Z')->exists())->toBeTrue();
 
-    $this->actingAs($user)->get(route('comunidades.exportar', $comunidad))
-        ->assertSuccessful()->assertHeader('content-type', 'text/csv; charset=UTF-8');
+    $response = $this->actingAs($user)->get(route('comunidades.exportar', $comunidad));
+
+    $response->assertSuccessful()->assertHeader('content-type', 'text/csv; charset=UTF-8');
+
+    expect($response->streamedContent())
+        ->toContain('12,50000000')
+        ->not->toContain('12.50000000');
 });
 
 it('envia un comunicado individual a cada propietario seleccionado', function () {

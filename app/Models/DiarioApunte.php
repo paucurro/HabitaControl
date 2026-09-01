@@ -19,13 +19,14 @@ class DiarioApunte extends Model
 
     protected $fillable = [
         'comunidad_id', 'tipo_gasto_id', 'banco_id', 'parte_id', 'proveedor_id', 'liquidacion_id',
-        'fecha', 'numero_documento', 'descripcion', 'debe', 'haber', 'base_imponible', 'porcentaje_iva',
+        'fecha', 'fecha_calculada', 'numero_documento', 'descripcion', 'debe', 'haber', 'base_imponible', 'porcentaje_iva',
     ];
 
     protected function casts(): array
     {
         return [
             'fecha' => 'date',
+            'fecha_calculada' => 'boolean',
             'debe' => 'decimal:4',
             'haber' => 'decimal:4',
             'base_imponible' => 'decimal:4',
